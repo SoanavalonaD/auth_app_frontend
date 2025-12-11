@@ -1,41 +1,26 @@
-import React, { useState } from 'react';
-import { UserPlus } from 'lucide-react';
 import { InputField } from '../../components/ui/InputField';
 import { PrimaryButton } from '../../components/ui/PrimaryButton';
 import { ErrorAlert } from '../../components/ui/ErrorAlert';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { register } from '../../store/slices/authSlices';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Register from '../../hooks/features/registerScreen';
+import { UserPlus } from 'lucide-react';
 
 
 const RegisterScreen: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  // On utilise l'état global Redux pour 'isLoading' et 'auth.error' du dernier appel API
-  const { isLoading, error: authError } = useAppSelector(state => state.auth); 
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  // Erreur locale (ex: mot de passe non-correspondant)
-  const [registerError, setRegisterError] = useState<string | null>(null); 
-  const [success, setSuccess] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setRegisterError(null);
-    if (password !== confirmPassword) {
-        setRegisterError("Les mots de passe ne correspondent pas.");
-        return;
-    }
-
-    const result = await dispatch(register({ email, password }));
-    
-    // Le thunk register retourne 'true' si l'API répond 200/201
-    if (result) {
-        setSuccess(true);
-    }
-  };
+  const { 
+    success, 
+    navigate, 
+    authError, 
+    registerError, 
+    handleSubmit, 
+    email, 
+    setEmail,
+    password, 
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    isLoading
+   } = Register();
 
   if (success) {
     return (

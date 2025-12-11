@@ -1,25 +1,13 @@
-import React, { useState } from 'react';
-import { LogIn } from 'lucide-react';
 import { InputField } from '../../components/ui/InputField';
 import { PrimaryButton } from '../../components/ui/PrimaryButton';
 import { ErrorAlert } from '../../components/ui/ErrorAlert';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { login } from '../../store/slices/authSlices';
 import { Link } from 'react-router-dom';
+import loginScreen from '../../hooks/features/loginScreen';
+import { Login } from '@mui/icons-material';
 
 
 const LoginScreen: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { isLoading, error, isAuthenticated } = useAppSelector(state => state.auth);
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isLoading || isAuthenticated) return;
-    dispatch(login({ email, password }));
-  };
+  const { isLoading, error, handleSubmit, email, setEmail, password, setPassword } = loginScreen();
 
   return (
     <div className="max-w-md w-full bg-white p-8 sm:p-10 rounded-3xl shadow-2xl space-y-8">
@@ -46,7 +34,8 @@ const LoginScreen: React.FC = () => {
         />
         
         <PrimaryButton isLoading={isLoading} type="submit">
-            <LogIn className="mr-3" size={20} />
+            {/* <Login className="mr-3" size={20}/> */}
+            <Login/>
             Se connecter
         </PrimaryButton>
       </form>

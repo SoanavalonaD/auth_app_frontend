@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { LogOut, User, Info, Loader2 } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { UseAppDispatch, UseAppSelector } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlices';
 import { PrimaryButton } from '../../components/ui/PrimaryButton';
 
-/**
- * Écran du Tableau de Bord (Dashboard) - Accès Protégé.
- * Affiche les informations utilisateur et permet la déconnexion.
- */
+
 const DashboardScreen: React.FC = () => {
-    const dispatch = useAppDispatch();
-    const { user, token, isLoading } = useAppSelector(state => state.auth);
+    const dispatch = UseAppDispatch();
+    const { user, token, isLoading } = UseAppSelector(state => state.auth);
 
     // Simuler le temps de chargement des données spécifiques au Dashboard (si React Query était utilisé)
     const [dashboardLoading, setDashboardLoading] = useState(true);

@@ -5,14 +5,11 @@ import RegisterScreen from "../features/auth/RegisterScreen";
 import DashboardScreen from "../features/users/DashboardScreen";
 import PrivateRoute from "./PrivateRoute";
 import { Loader2 } from "lucide-react";
-import useAuth from "../hooks/routes/appRoutes";
+import useAuth from "../hooks/routes/HookRoutes";
 
-/**
- * Composant central pour la gestion de toutes les routes de l'application.
- */
+
 const AppRoutes: React.FC = () => {
   const { isAuthInitialized, token } = useAuth();
-  // Afficher un écran de chargement pendant l'initialisation (si un token est présent)
 
   if (!isAuthInitialized && token) {
     return (

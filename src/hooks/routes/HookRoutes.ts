@@ -1,20 +1,19 @@
-import { useHistory } from "react-router-dom";
 import { UseAppDispatch, UseAppSelector } from "../../store/hooks";
 import { useEffect, useState } from "react";
 import { initializeAuth } from "../../store/slices/authSlices";
+// Importation de useNavigate pour remplacer useHistory
+import { useNavigate } from "react-router-dom"; 
 
-const appRoutes = () => {
-  const dispatch = UseAppDispatch();
-  const history = useHistory();
+const HookRoutes = () => {
+  const dispatch = UseAppDispatch(); 
+  const navigate = useNavigate(); 
   const { isAuthenticated, token } = UseAppSelector((state) => state.auth);
 
-  // État local pour indiquer si l'initialisation (vérification du token) est terminée
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
 
   // 1. Initialise l'état d'authentification au premier chargement (vérifie le token local)
   useEffect(() => {
     const init = async () => {
-      // Si un token est présent dans localStorage, on tente de fetcher l'utilisateur
       if (token) {
         await dispatch(initializeAuth());
       }
@@ -25,21 +24,20 @@ const appRoutes = () => {
 
   // 2. Redirige si l'état d'authentification change
   useEffect(() => {
-    // Naviguer uniquement après que l'initialisation soit faite
     if (isAuthInitialized) {
       if (isAuthenticated) {
-        history.push("/dashboard");
+        navigate("/dashboard"); 
       } else {
-        // S'assurer qu'on est sur une route publique si déconnecté
+        const currentPath = window.location.pathname;
         if (
-          window.location.pathname !== "/login" &&
-          window.location.pathname !== "/register"
+          currentPath !== "/login" &&
+          currentPath !== "/register"
         ) {
-          history.push("/login");
+          navigate("/login");
         }
       }
     }
-  }, [isAuthenticated, isAuthInitialized, history]);
+  }, [isAuthenticated, isAuthInitialized, navigate]);
 
   return {
     isAuthInitialized,
@@ -47,4 +45,4 @@ const appRoutes = () => {
   };
 };
 
-export default appRoutes;
+export default HookRoutes;
