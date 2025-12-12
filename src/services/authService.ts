@@ -6,7 +6,9 @@ import { AxiosError } from 'axios';
 type UserData = {
     id: number;
     email: string;
-    firstName: string; 
+    first_name: string;
+    last_name: string;
+    is_active: boolean;
 };
 
 
@@ -29,19 +31,10 @@ export const authService = {
      */
     login: async (payload: UserLoginPayload): Promise<AuthTokenResponse> => {
         try {
-            // Encodage en 'application/x-www-form-urlencoded' pour le token endpoint de FastAPI
-            const formData = new URLSearchParams();
-            formData.append('username', payload.email);
-            formData.append('password', payload.password);
-    
+            // Envoi en JSON (format cohérent avec le reste de l'API)
             const response = await api.post<AuthTokenResponse>(
-                '/api/v1/auth/login', 
-                formData.toString(), 
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                }
+                '/api/v1/auth/login',
+                payload
             );
             return response.data;
         } catch (error) {
@@ -57,18 +50,18 @@ export const authService = {
             throw new Error("Erreur de réseau ou serveur non disponible.");
         }
     },
-    
+
     /**
      * Récupère les informations de l'utilisateur connecté (via son JWT).
      */
     fetchCurrentUser: async (): Promise<UserData> => {
         try {
-            
-            const response = await api.get<UserData>('/api/v1/auth/users/me'); 
+
+            const response = await api.get<UserData>('/api/v1/auth/users/me');
             return response.data;
         } catch (error) {
             const axiosError = error as AxiosError;
-             if (axiosError.response?.status === 401) {
+            if (axiosError.response?.status === 401) {
                 throw new Error("Session expirée. Veuillez vous reconnecter.");
             }
             throw new Error("Impossible de récupérer les informations utilisateur.");
